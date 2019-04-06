@@ -7,4 +7,4 @@ The project is diveded in 3 main parts:
 
 You can check the R file. Please, note that I am currently working in this project and it has not finished yet.
 Contact:
-e-mail: francisco.alvarez.89@hotmail.es
+- e-mail: francisco.alvarez.89@hotmail.es
