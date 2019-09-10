@@ -72,7 +72,7 @@ if(!require("googleLanguageR")){
   # Here we are loading the package
   library("googleLanguageR")
 }
-#####-------------------------------------------------------------
+############################################################################
 #The GSK tweets are going to be downloaded
 ## load rtweet package
 #For more information regarding the tweets, see the below link:
@@ -86,24 +86,33 @@ create_token(
 #Authentification on my google account to get the geocde
 #This is my API from my API key. To get the API see this site:
 #https://cloud.google.com/maps-platform/?__utma=102347093.739445211.1529438971.1543151047.1543151047.1&__utmb=102347093.0.10.1543151047&__utmc=102347093&__utmx=-&__utmz=102347093.1543151047.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none)&__utmv=-&__utmk=222020888&_ga=2.179297060.1418589899.1543143627-739445211.1529438971#get-started
-my_key<-'AIzaSyC9EWMz-hClrRCdgaLwvl_N4B355d-CdAA'
+my_key<-'AIzaSyBtYwLtBkPRBXW4EB1tzbaYBTXSb1rXCwg'
 
 #Get the tweets which talk about GSK, choosing the country and the recent tweets
 #Collemos tamén os rtweets.
 #E tamén collemos solo os tweets que están en español
+
 GSK_tweets <- search_tweets(
-  "GSK", type='recent', n = 10000, include_rts =TRUE, 
-  lookup_coords(address='spain', apikey = my_key), lang="es"
-)
+  "GSK", type='recent', n = 50, include_rts =TRUE, 
+  geocode = lookup_coords("Spain", apikey = my_key ), lang="es")
+
 View(GSK_tweets)
+
 #To see where the tweets come from.
 #The city is obtained
 location <-GSK_tweets[['location']]
 location_city<-strsplit(location, split=",")
+
 for (i in 1:length(location_city)){
   GSK_tweets[['location_city']][i] <-location_city [[i]][1]
 }
 
+View(location)
+##Esta forma de escibir o código e para o shiny
+for (i in 1:length(strsplit(GSK_tweets[['location']], split=","))){
+  GSK_tweets[['location_city']][i] <-strsplit(GSK_tweets[['location']], split=",") [[i]][1]
+}
+View(GSK_tweets)
 #########################################################################
 #MISSING VALUES
 #For the cells with no location, we are going to set Madrid as the default value
@@ -113,16 +122,35 @@ for(i in 1:nrow(GSK_tweets)){
     'Madrid'} else {
       GSK_tweets[[i,89]]}
 }
-View(GSK_tweets)
-############################################################################
-#The latitude and longitude of the city is obtained (coordenate_y and coordenate_x)
-for (i in 1:length(location)){
-  GSK_tweets[['coordenates_y']][i] <- geocode_coordinates(google_geocode(address=GSK_tweets[['location_city']][i], key=my_key, simplify=TRUE))[1]
-  GSK_tweets[['coordenates_x']][i] <- geocode_coordinates(google_geocode(address=GSK_tweets[['location_city']][i], key=my_key, simplify=TRUE))[2]
+
+#When there is not valid values in the "location City" column, we 
+#are going to assign a default value to those rows in order to not have problems ahead.
+#Note that if the location city is not valid (for instance a location with 
+#numbers), the coordenates are not going to be found and the system will pop
+#up an error message.
+#Therefore, values with number or strange symbols in the location_city column
+#will be assign the Madrid default value.
+
+for(i in 1:nrow(GSK_tweets)){
+  GSK_tweets[['location_city']][i] <- if (grepl("[[:digit:]]", GSK_tweets[[i,89]])){
+    'Madrid'} else {
+      GSK_tweets[[i,89]]}
 }
 
+View(GSK_tweets)
 
+#We are going to remove the locations with straange characters as @ or s
+############################################################################
+#The latitude and longitude of the city is obtained (coordenate_y and coordenate_x)
 
+#QUEDACHES EIQUI. O QUE PODES FACER E VER QUE SI DA ERROR QUE POÑA
+#O VALOR DE MADRID COMO DEFECTO.
+
+for (m in 1:nrow(GSK_tweets)){
+  GSK_tweets[['coordenates_y']][m] <- lookup_coords(GSK_tweets[['location_city']][m], apikey = my_key)$point[1]
+  GSK_tweets[['coordenates_x']][m] <- lookup_coords(GSK_tweets[['location_city']][m], apikey = my_key)$point[2]
+}
+View(GSK_tweets)
 
 #The following code is to not overlap tweets and be able to visualize all of the tweets
 #This is to not have tweets in the same place. If there are tweets in the same place,
@@ -139,7 +167,6 @@ for (i in 2:length(location)) {
     print(GSK_tweets[[i,90]]+i/900)} else {
       print(GSK_tweets[[i,90]])}
 }
-
 #We put the new coordenates in another column named 'coordenates_y_1'.
 #I mean, the previous code is placed in a new column in the data frame.
 #We add i in order to not have the same coordentes. Because if there are lot of equal
@@ -213,7 +240,7 @@ if(!require("wordcloud")){
   # Here we are loading the package
   library("wordcloud")
 }
-
+#WORDCLOUD para os tweets
 #Look at tweets
 head(GSK_tweets)
 dim(GSK_tweets)
@@ -248,17 +275,43 @@ GSK_tweetsTable <-GSK_tweetsTable %>%
   filter(!word %in% c('t.co', 'https'))
 View(GSK_tweetsTable)
 
-#Imprimimos la nube de palabras
+#Ploting the word cloud for the tweets
 wordcloud(words = GSK_tweetsTable$word, freq = GSK_tweetsTable$n, min.freq = 10,
           max.words=500, random.order=TRUE, rot.per=0.1, 
           colors=brewer.pal(8, "Dark2"))
 
+#WORDCLOUD para os hastags
+#Metemos os hashtags todos nunha mesma lista.
+GSK_hashtags<-GSK_tweets[[15]]
+GSK_hashtags_list <- c()
+#All the hashtags are placed in  list.
+for (n in 1:length(GSK_hashtags)) {GSK_hashtags_list <- c(GSK_hashtags_list, GSK_hashtags[[n]][1:length(GSK_hashtags[[n]])])}
+GSK_hashtags_list
+#Remove the NA applicable values from the GSK_hashtags_list
+GSK_hashtags_clean <- c()
+for (hashtag in GSK_hashtags_list) {if (!is.na(hashtag)){
+  GSK_hashtags_clean <- c(GSK_hashtags_clean, hashtag)
+  }
+}
+GSK_hashtags_clean
+#Converting the 'GSK_hashtag_clean' from a list to a data frame.
+GSK_hashtags_clean <- data.frame(GSK_hashtags_clean)
+View(GSK_hashtags_clean)
+#Counting the word ocurrences in 'GSK_hashtgs_clean' list
+GSK_hashtags_clean <- GSK_hashtags_clean %>%
+  count(GSK_hashtags_clean, sort = TRUE)
+# Ploting the word cloud foor the hashtags
+wordcloud(words = GSK_hashtags_clean$GSK_hashtags_clean, freq = GSK_hashtags_clean$n,
+          scale = c(1.5,.5), min.freq = 2,max.words=500, random.order=TRUE, 
+          rot.per=0.01, colors=brewer.pal(8, "Dark2"))
+
 ################################################################################
 #See the people with the most number of followers which is talking about GSK
-data.frame(GSK_tweets$name, sort(GSK_tweets$followers_count, decreasing=TRUE))
+most_famous_people<-data.frame(GSK_tweets$name, sort(GSK_tweets$followers_count, decreasing=TRUE))
 ##See the people with the most number of friends which is talking about GSK
-data.frame(GSK_tweets$name, sort(GSK_tweets$friends_count, decreasing=TRUE))
-
+most_friendly_people<-data.frame(GSK_tweets$name, sort(GSK_tweets$friends_count, decreasing=TRUE))
+##############################################################################
+#And now it time for Shiny.
 
 
 
@@ -282,8 +335,8 @@ nrow(get_sentiments("loughran"))
 #ten co teu data set de 'd'.
 join <- inner_join(d,get_sentiments("nrc"), by = "word")
 View(join)
-#Agrupamos e sumamos o nÃºmero de ocurrenias de cada categorÃ­a. Desta forma podes ver
-#de que estÃ¡ falando os tweets. De que categorÃ­a son cada un.
+#Agrupamos e sumamos o nÃºmero de ocurrenias de cada categorÃ?a. Desta forma podes ver
+#de que estÃ¡ falando os tweets. De que categorÃ?a son cada un.
 m<-aggregate(join$freq, by=list(Category=join$sentiment), FUN=sum)
 ggplot(m, aes(x=Category, y=x)) + geom_bar(stat = "identity")
 View(m) 
