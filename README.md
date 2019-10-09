@@ -1,4 +1,4 @@
-# analysis_of_tweets
+# Tweets-analyzer
 The objective of this project is to analyze the tweets from any organization, in order to see what's people are talking about it.
 The project is diveded in 3 main parts:
 - Creation of a map which shows the tweets, the person who writes the tweet and where the tweet comes from.
