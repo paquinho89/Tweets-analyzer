@@ -2,11 +2,11 @@ library(shiny)
 library(DT)
 #Obtainning access for the twittwer account
 create_token(
-  app = "TwitterMiningAppPaquinho",
-  consumer_key = "neLjKSZoj6cSRqSp9686vGbq8",
-  consumer_secret = "tqm10cENHprTQtDvvoAUPvqPGXo3WvfL33R5fJzaqluBgbZbvq")
+  app = "xxxxxxxxxxxxxxxxxxxxxxxxx",
+  consumer_key = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+  consumer_secret = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
 #Key for the google coordenates. 
-my_key<-'AIzaSyBtYwLtBkPRBXW4EB1tzbaYBTXSb1rXCwg'
+my_key<-'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
   
 
 shinyServer (function(input, output){
