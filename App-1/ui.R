@@ -1,28 +1,38 @@
 library(shiny)
-ui <- fluidPage(
+shinyUI (fluidPage(
   titlePanel("Analyzing Tweets"),
   sidebarLayout(
     sidebarPanel(
       textInput(inputId="text",label= "Topic", value="Write just one word"),
-      selectInput(inputId="language", label="Choose Language", c('Spanish'='es','English'='en')),
-      checkboxGroupInput(inputId="grafica", label="plot", choices = list("Map"=1,
-                                                           "TweetWordCloud"=2,
-                                                           "HashtagWordCloud"=3)
-      ),
+      
+      selectInput(inputId="language", label="Choose Language", 
+                  c('Spanish'='es','English'='en','French'='fr',
+                    'Italian'='it')),
+      
+      selectInput(inputId="country", label="Choose country", 
+                  c('Spain'='Spain','UK'='United Kingdom','France'='France',
+                    'Italy'='Italy')),
+
       sliderInput(inputId="tweets", label="Number of tweets",
-                  min=10, max=500, value=250),
-      submitButton("Submit"),
+                  min=2, max=20, value=3),
+      
+      actionButton(inputId='go', label = "Submit"),
+      
       helpText(label="When you click the button above, you should see",
                "the output below update to reflect the value you",
                "entered at the top:")
     ),
     #Esto básicamente é para que me deixe espacio para os gráficos
     mainPanel(
-      plotOutput("word_cloud_tweets")
+      tabsetPanel(
+        tabPanel(title='relevant people',
+          dataTableOutput("most_famous_people"))
+      )
       #leafletOutput(label="map", width = "100%", height = "100%"),
       #textOutput("number_of_tweets")
     )
   )
 )
-shinyApp(ui=ui, server=server)
+)
+#shinyApp(ui=ui, server=server)
   
