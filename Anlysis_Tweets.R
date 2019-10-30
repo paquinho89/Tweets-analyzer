@@ -89,6 +89,7 @@ create_token(
   consumer_key = "neLjKSZoj6cSRqSp9686vGbq8",
   consumer_secret = "tqm10cENHprTQtDvvoAUPvqPGXo3WvfL33R5fJzaqluBgbZbvq")
 
+
 #GOOGLE AUTHENTICATION
 #Authentification on my google account to get the geocOde
 #This is my API from my API key. To get the API see this site:
@@ -103,8 +104,8 @@ my_key<-'AIzaSyBtYwLtBkPRBXW4EB1tzbaYBTXSb1rXCwg'
 GSK_tweets <- search_tweets(
   "GSK", type='recent', n = 10,include_rts =TRUE, 
   geocode = lookup_coords("Spain", apikey = my_key ), lang="es")
-
 View(GSK_tweets)
+class(GSK_tweets)
 ###################################################################################
 #To see where the tweets come from.
 #A NEW COLUMN IS CREATED WITH THE LOCATION CITY OF THE TWEET
@@ -284,14 +285,16 @@ GSK_tweets$text
 #O que estamos facendo e crear unha fila por palabra.
 GSK_tweetsTable <- GSK_tweets %>% 
   unnest_tokens(word, text)
-View(GSK_tweetsTable)
+
 #################################################################################
 #DELETING THE WORDS WHICH DO NOT ADD ANY INFORMATION from the GSK_tweetsTable (stop words)
 #################################################################################
 #This library has stopwords which do not add value.
-#We choose the stopowords in the spanish language
+#We choose the stopowords in the spanish language and the column name is changed
+#to the name "words".
 library(stopwords)
-spanish_stop_words<-data.frame(stopwords(language = 'es'))
+spanish_stop_words<-data.frame(word=stopwords(language = 'es'))
+colnames(spanish_stop_words)
 View(spanish_stop_words)
 #We are going to do an anti_join. The values which are in both tables are going to be removed
 #from the GSK_tweetsTable.
@@ -325,8 +328,14 @@ wordcloud(words = GSK_tweetsTable$word, freq = GSK_tweetsTable$n, min.freq = 10,
 #The column with hashtags in column GSK_tweets, is obtained
 GSK_hashtags<-GSK_tweets[[15]]
 #All the hashtags are placed in a list.
-for (n in 1:length(GSK_hashtags)) {GSK_hashtags_list <- c(GSK_hashtags_list, GSK_hashtags[[n]][1:length(GSK_hashtags[[n]])])}
-
+GSK_hashtags_list<-list()
+for (n in 1:length(GSK_hashtags)) GSK_hashtags_list<-{c(GSK_hashtags_list, GSK_hashtags[[n]][1:length(GSK_hashtags[[n]])])}
+GSK_hashtags
+m<-unlist(GSK_tweets$hashtags)
+m
+ml <- table(m)
+l<-data.frame(l)
+class(l)
 #Remove the NA applicable values from the GSK_hashtags_list
 for (hashtag in GSK_hashtags_list) {if (!is.na(hashtag)){
   GSK_hashtags_clean <- c(GSK_hashtags_clean, hashtag)
@@ -344,12 +353,18 @@ wordcloud(words = GSK_hashtags_clean$GSK_hashtags_clean, freq = GSK_hashtags_cle
           scale = c(1.5,.5), min.freq = 2,max.words=500, random.order=TRUE, 
           rot.per=0.01, colors=brewer.pal(8, "Dark2"))
 
+
 ###################################PART 3 - ANALYSIS OF PEOPLE ###########################
 ################################################################################
 #See the people with the most number of followers which is talking about GSK
-most_famous_people<-data.frame(GSK_tweets$name, sort(GSK_tweets$followers_count, decreasing=TRUE))
+#The square brackes are used t extract the colum, Therefore we extract the colum
+#and order the data frame by the followers account column. The "-" symbol is 
+#to order from the highest to the lowest
+most_famous_people<- data.frame(GSK_tweets[order(-GSK_tweets$followers_count),])
+View(most_famous_people[c("followers_count", "name")])
+View(GSK_tweets)
 ##See the people with the most number of friends which is talking about GSK
-most_friendly_people<-data.frame(GSK_tweets$name, sort(GSK_tweets$friends_count, decreasing=TRUE))
-View(most_famous_people)
+most_friendly_people<-data.frame(GSK_tweets[order(-GSK_tweets$friends_count),])
+View(most_friendly_people)
 ##############################################################################
-#AND NOW IS TIME FOR SHINY
+#AND NOW IT IS TIME FOR SHINY
