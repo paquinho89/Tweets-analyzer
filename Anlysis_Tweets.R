@@ -85,9 +85,9 @@ if(!require("googleLanguageR")){
 
 #Authentification on Twitter accounts
 create_token(
-  app = "TwitterMiningAppPaquinho",
-  consumer_key = "neLjKSZoj6cSRqSp9686vGbq8",
-  consumer_secret = "tqm10cENHprTQtDvvoAUPvqPGXo3WvfL33R5fJzaqluBgbZbvq")
+  app = "XXXXXXXXXXXXXXXXXXXXX",
+  consumer_key = "XXXXXXXXXXXXXXXX",
+  consumer_secret = "XXXXXXXXXXXXXXXXXXXXXXX")
 
 
 #GOOGLE AUTHENTICATION
@@ -95,7 +95,7 @@ create_token(
 #This is my API from my API key. To get the API see this site:
 #https://cloud.google.com/maps-platform/?__utma=102347093.739445211.1529438971.1543151047.1543151047.1&__utmb=102347093.0.10.1543151047&__utmc=102347093&__utmx=-&__utmz=102347093.1543151047.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none)&__utmv=-&__utmk=222020888&_ga=2.179297060.1418589899.1543143627-739445211.1529438971#get-started
 
-my_key<-'AIzaSyBtYwLtBkPRBXW4EB1tzbaYBTXSb1rXCwg'
+my_key<-'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
 #########################################################################
 #GETTING THE TWEETS
 ###########################################################################
@@ -204,7 +204,7 @@ for (n in 1:length(GSK_tweets[['location']])){
 
 View (GSK_tweets)
 
-#####################################################ESTE CÓDIGO PODRÍASE ELIMINAR##########3
+#####################################################ESTE CÃ“DIGO PODRÃASE ELIMINAR##########3
 #Temos que traducir o text para que me pille ben as cidades
 #Pra darte de alta teste que ler estas duas paxinas
 #https://cran.r-project.org/web/packages/googleLanguageR/vignettes/setup.html
@@ -218,7 +218,7 @@ gl_translate(text, target = "es")$translatedText
 #PLOTTING THE COORDINATES IN A MAP
 ###############################################################################################
 library(leaflet)
-#Convertimos as coordenadas_x e as coordenadas_y a formao numérico para poder represenetar
+#Convertimos as coordenadas_x e as coordenadas_y a formao numÃ©rico para poder represenetar
 #os markers no mapa. Se non da error
 #Representamos o mapa e despois engadimos os markers para ver de donde son os tweets.
 leaflet(data = GSK_tweets) %>% addTiles() %>%
