@@ -25,13 +25,19 @@ shinyUI (fluidPage(
     #Esto básicamente é para que me deixe espacio para os gráficos
     mainPanel(
       tabsetPanel(
+        tabPanel(title="WordCloud_hashtag",
+                 plotOutput("wordcloud_hashtag")),
+        tabPanel(title="WordCloud_tweets",
+          plotOutput("wordcloud_tweets")),
         tabPanel(title='relevant people',
-          dataTableOutput("most_famous_people"))
-      )
+                 dataTableOutput("most_famous_people"))
+        
+        
       #leafletOutput(label="map", width = "100%", height = "100%"),
       #textOutput("number_of_tweets")
     )
   )
+)
 )
 )
 #shinyApp(ui=ui, server=server)
