@@ -127,9 +127,9 @@ library(stopwords)
 
 #Authentification on Twitter accounts
 create_token(
-  app = "TwitterMiningAppPaquinho",
-  consumer_key = "neLjKSZoj6cSRqSp9686vGbq8",
-  consumer_secret = "tqm10cENHprTQtDvvoAUPvqPGXo3WvfL33R5fJzaqluBgbZbvq")
+  app = "XXXXXXX",
+  consumer_key = "XXXXXX",
+  consumer_secret = "XXXXX")
 
 
 #GOOGLE AUTHENTICATION
@@ -137,6 +137,6 @@ create_token(
 #This is my API from my API key. To get the API see this site:
 #https://cloud.google.com/maps-platform/?__utma=102347093.739445211.1529438971.1543151047.1543151047.1&__utmb=102347093.0.10.1543151047&__utmc=102347093&__utmx=-&__utmz=102347093.1543151047.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none)&__utmv=-&__utmk=222020888&_ga=2.179297060.1418589899.1543143627-739445211.1529438971#get-started
 
-my_key<-'AIzaSyBtYwLtBkPRBXW4EB1tzbaYBTXSb1rXCwg'
+my_key<-'XXXXXXX'
 
 
