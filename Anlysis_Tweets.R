@@ -75,6 +75,10 @@ if(!require("googleLanguageR")){
   library("googleLanguageR")
 }
 
+#Installing the KeyRing package to hide the passwords and user names
+install.packages("keyring")
+library(keyring)
+
 ############################################### PART 1 - PLOTTING THE MAP ###############################
 #############################################################################
 #AUTHENTICATION
@@ -83,19 +87,27 @@ if(!require("googleLanguageR")){
 #For more information regarding the tweets, see the below link:
 #https://rtweet.info/ para quitar os tweets
 
+############################################################
+#HIDDEN THE CREDENTIALS AND THE PASSWORDS FOR MY TWITTER ACCOUNT
+key_set("app")
+key_set("consumer_key")
+key_set("consumer_secret")
+
 #Authentification on Twitter accounts
 create_token(
-  app = "XXXXXXXXXXXXXXXXXXXXX",
-  consumer_key = "XXXXXXXXXXXXXXXX",
-  consumer_secret = "XXXXXXXXXXXXXXXXXXXXXXX")
-
+  app = key_get("app"),
+  consumer_key = key_get("consumer_key"),
+  consumer_secret = key_get("consumer_secret"))
 
 #GOOGLE AUTHENTICATION
 #Authentification on my google account to get the geocOde
 #This is my API from my API key. To get the API see this site:
 #https://cloud.google.com/maps-platform/?__utma=102347093.739445211.1529438971.1543151047.1543151047.1&__utmb=102347093.0.10.1543151047&__utmc=102347093&__utmx=-&__utmz=102347093.1543151047.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none)&__utmv=-&__utmk=222020888&_ga=2.179297060.1418589899.1543143627-739445211.1529438971#get-started
 
-my_key<-'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+########HIDDEN THE KEY ACCOUNT FOR GOOGLE###############
+key_set("key_google")
+key_google<-key_get("key_google")
+
 #########################################################################
 #GETTING THE TWEETS
 ###########################################################################
@@ -103,7 +115,8 @@ my_key<-'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
 
 GSK_tweets <- search_tweets(
   "GSK", type='recent', n = 10,include_rts =TRUE, 
-  geocode = lookup_coords("Spain", apikey = my_key ), lang="es")
+  geocode = lookup_coords("Spain", apikey = key_google ), lang="es")
+
 View(GSK_tweets)
 class(GSK_tweets)
 ###################################################################################
@@ -118,12 +131,12 @@ location_city<-strsplit(location, split=",")
 for (i in 1:length(location_city)){
   GSK_tweets[['location_city']][i] <-location_city [[i]][1]
 }
-View(location)
 
   #Option 2: A shorter code than the previous one:
 for (i in 1:length(strsplit(GSK_tweets[['location']], split=","))){
   GSK_tweets[['location_city']][i] <-strsplit(GSK_tweets[['location']], split=",") [[i]][1]
 }
+
 View(GSK_tweets)
 #########################################################################
 #MISSING VALUES
@@ -146,18 +159,12 @@ View(GSK_tweets)
 ###########################################################################
 #Coordenadas en y
 for (m in 1:nrow(GSK_tweets)){
-  GSK_tweets[['coordenates_y']][m] <- if (is.null(lookup_coords(GSK_tweets[['location_city']][m], apikey = my_key)$point[1])){
-    lookup_coords('Madrid', apikey = my_key)$point[1]} else {
-      lookup_coords(GSK_tweets[['location_city']][m], apikey = my_key)$point[1]
+  GSK_tweets[['coordenates_y']][m] <-lookup_coords(GSK_tweets[['location_city']][m], apikey = my_key)$point[1]
     }
-}
 #Coordenadas en x
 for (m in 1:nrow(GSK_tweets)){
-  GSK_tweets[['coordenates_x']][m] <- if (is.null(lookup_coords(GSK_tweets[['location_city']][m], apikey = my_key)$point[2])){
-    lookup_coords('Madrid', apikey = my_key)$point[2]} else {
-      lookup_coords(GSK_tweets[['location_city']][m], apikey = my_key)$point[2]
+  GSK_tweets[['coordenates_x']][m] <-lookup_coords(GSK_tweets[['location_city']][m], apikey = my_key)$point[2]
     }
-}
 View(GSK_tweets)
 ##########################################################################################
 #REMOVING THE OOVERLAPPING FROM THE TWEETS WITH THE SAME LOCATION
@@ -204,7 +211,7 @@ for (n in 1:length(GSK_tweets[['location']])){
 
 View (GSK_tweets)
 
-#####################################################ESTE CÃ“DIGO PODRÃASE ELIMINAR##########3
+#####################################################ESTE CÓDIGO PODRÍASE ELIMINAR##########3
 #Temos que traducir o text para que me pille ben as cidades
 #Pra darte de alta teste que ler estas duas paxinas
 #https://cran.r-project.org/web/packages/googleLanguageR/vignettes/setup.html
@@ -218,7 +225,7 @@ gl_translate(text, target = "es")$translatedText
 #PLOTTING THE COORDINATES IN A MAP
 ###############################################################################################
 library(leaflet)
-#Convertimos as coordenadas_x e as coordenadas_y a formao numÃ©rico para poder represenetar
+#Convertimos as coordenadas_x e as coordenadas_y a formao numérico para poder represenetar
 #os markers no mapa. Se non da error
 #Representamos o mapa e despois engadimos os markers para ver de donde son os tweets.
 leaflet(data = GSK_tweets) %>% addTiles() %>%
@@ -263,7 +270,6 @@ if(!require("stringr")){
   # Here we are loading the package
   library("stringr")
 }
-require(devtools)
 # install wordcloud
 # Here we are checking if the package is installed
 if(!require("wordcloud")){
@@ -330,12 +336,10 @@ GSK_hashtags<-GSK_tweets[[15]]
 #All the hashtags are placed in a list.
 GSK_hashtags_list<-list()
 for (n in 1:length(GSK_hashtags)) GSK_hashtags_list<-{c(GSK_hashtags_list, GSK_hashtags[[n]][1:length(GSK_hashtags[[n]])])}
-GSK_hashtags
-m<-unlist(GSK_tweets$hashtags)
-m
-ml <- table(m)
-l<-data.frame(l)
-class(l)
+#######################################################################
+#This is another way much easier, to unlist the GSK_hashtgs list.
+GSK_hashtags_list<-unlist(GSK_tweets$hashtags)
+
 #Remove the NA applicable values from the GSK_hashtags_list
 for (hashtag in GSK_hashtags_list) {if (!is.na(hashtag)){
   GSK_hashtags_clean <- c(GSK_hashtags_clean, hashtag)
