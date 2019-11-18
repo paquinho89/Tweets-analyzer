@@ -14,7 +14,7 @@ shinyUI (fluidPage(
                     'Italy'='Italy')),
 
       sliderInput(inputId="tweets", label="Number of tweets",
-                  min=2, max=20, value=3),
+                  min=5, max=50, value=20),
       
       actionButton(inputId='go', label = "Submit"),
       
@@ -25,6 +25,8 @@ shinyUI (fluidPage(
     #Esto básicamente é para que me deixe espacio para os gráficos
     mainPanel(
       tabsetPanel(
+        tabPanel(title="Map",
+                 leafletOutput(outputId="map")),
         tabPanel(title="WordCloud_hashtag",
                  plotOutput("wordcloud_hashtag")),
         tabPanel(title="WordCloud_tweets",
@@ -41,4 +43,4 @@ shinyUI (fluidPage(
 )
 )
 #shinyApp(ui=ui, server=server)
-  
+

@@ -116,6 +116,7 @@
 #}
 
 library(stopwords)
+library(leaflet)
 
 ############################################### PART 1 - PLOTTING THE MAP ###############################
 #############################################################################
@@ -126,10 +127,16 @@ library(stopwords)
 #https://rtweet.info/ para quitar os tweets
 
 #Authentification on Twitter accounts
+#Hiding my credentials
+#key_set("app")
+#key_set("consumer_key")
+#key_set("consumer_secret")
+
+#Authentification on Twitter accounts
 create_token(
-  app = "XXXXXXX",
-  consumer_key = "XXXXXX",
-  consumer_secret = "XXXXX")
+  app = key_get("app"),
+  consumer_key = key_get("consumer_key"),
+  consumer_secret = key_get("consumer_secret"))
 
 
 #GOOGLE AUTHENTICATION
@@ -137,6 +144,8 @@ create_token(
 #This is my API from my API key. To get the API see this site:
 #https://cloud.google.com/maps-platform/?__utma=102347093.739445211.1529438971.1543151047.1543151047.1&__utmb=102347093.0.10.1543151047&__utmc=102347093&__utmx=-&__utmz=102347093.1543151047.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none)&__utmv=-&__utmk=222020888&_ga=2.179297060.1418589899.1543143627-739445211.1529438971#get-started
 
-my_key<-'XXXXXXX'
+#Hiding my credentials
+#key_set("key_google")
+key_google<-key_get("key_google")
 
 
