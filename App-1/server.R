@@ -1,7 +1,5 @@
-library(shiny)
-library(DT)
 
-shinyServer (function(input, output){
+shinyServer(function(input, output){
 #Obtaining the tweets.  
   GSK_tweets <- eventReactive(input$go, {data.frame(search_tweets(input$text, type='recent', n=input$tweets, include_rts =TRUE, 
                               geocode = lookup_coords(input$country, apikey = key_google ), lang=input$language))
@@ -123,12 +121,12 @@ shinyServer (function(input, output){
     GSK_tweets()[c("name", "text", "followers_count")]
   })
 })
+
+
   
 #https://stackoverflow.com/questions/32009512/shiny-application-to-fetch-twitter-search-results-and-show-last-5-tweets-and-wor 
 
 #BÓTALLE UN OLLO A ESTO
 #https://paula-moraga.github.io/book-geospatial/sec-shinyexample.html
-#Este proyecto ten bucles for
-#https://github.com/HinChou/R-Shiny-Project/blob/master/Shiny%20for%20Portfolio%20Optimization/server.R
 
 

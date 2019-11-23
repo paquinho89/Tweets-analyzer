@@ -1,5 +1,5 @@
-library(shiny)
-shinyUI (fluidPage(
+
+shinyUI(fluidPage(
   titlePanel("Analyzing Tweets"),
   sidebarLayout(
     sidebarPanel(
@@ -40,7 +40,7 @@ shinyUI (fluidPage(
     )
   )
 )
-)
-)
+))
+
 #shinyApp(ui=ui, server=server)
 
