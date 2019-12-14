@@ -15,17 +15,15 @@ if(!require("tmap")){
   # Here we are loading the package
   library("tmap")
 }
+#This is for the maps and geolocations
 # Here we are checking if the package is installed
 if(!require("ggplot2")){
   # If the package is not in the system then it will be install
-  install.packages(
-    "ggplot2",
-    repos = c("http://rstudio.org/_packages",
-              "http://cran.rstudio.com")
-  )
+  install.packages("ggplot2", dependencies = TRUE)
   # Here we are loading the package
   library("ggplot2")
 }
+
 #This is for the maps and geolocations
 # Here we are checking if the package is installed
 if(!require("googleway")){
@@ -54,10 +52,12 @@ if(!require("yaml")){
 # Here we are checking if the package is installed
 if(!require("mapsapi")){
   # If the package is not in the system then it will be install
-  install.packages("yaml", repos="http://cran.rstudio.com/", dependencies=TRUE)
+  install.packages("mapsapi")
   # Here we are loading the package
   library("mapsapi")
 }
+#Colling the library leaflet to plot the map
+library("leaflet")
 #install devtools
 # Here we are checking if the package is installed
 if(!require("devtools")){
@@ -159,11 +159,11 @@ View(GSK_tweets)
 ###########################################################################
 #Coordenadas en y
 for (m in 1:nrow(GSK_tweets)){
-  GSK_tweets[['coordenates_y']][m] <-lookup_coords(GSK_tweets[['location_city']][m], apikey = my_key)$point[1]
+  GSK_tweets[['coordenates_y']][m] <-lookup_coords(GSK_tweets[['location_city']][m], apikey = key_get("key_google"))$point[1]
     }
 #Coordenadas en x
 for (m in 1:nrow(GSK_tweets)){
-  GSK_tweets[['coordenates_x']][m] <-lookup_coords(GSK_tweets[['location_city']][m], apikey = my_key)$point[2]
+  GSK_tweets[['coordenates_x']][m] <-lookup_coords(GSK_tweets[['location_city']][m], apikey = key_get("key_google"))$point[2]
     }
 View(GSK_tweets)
 ##########################################################################################
@@ -179,9 +179,9 @@ number_of_rows <- nrow(GSK_tweets)
 #We go from 2 to the lenght of the data frame.
 #We check if the value is equal to the previous one, If it is equal, we add 1 and i/10.
 for (i in 2:length(GSK_tweets[['location']])) {
-  if (GSK_tweets[[i,90]]==GSK_tweets[[i-1,90]]){
-    print(GSK_tweets[[i,90]]+i/900)} else {
-      print(GSK_tweets[[i,90]])}
+  if (GSK_tweets[[i,92]]==GSK_tweets[[i-1,92]]){
+    print(GSK_tweets[[i,92]]+i/900)} else {
+      print(GSK_tweets[[i,92]])}
 }
 View(GSK_tweets)
 #########################################################################################
@@ -194,10 +194,10 @@ View(GSK_tweets)
 #we need to add a different value each time. For this reason, we sum i, as it is
 #a value which change over the loop.
 for (i in 2:length(GSK_tweets[['location']])){
-  GSK_tweets[['coordenates_y_1']][1]<- GSK_tweets[[1,90]]
-  GSK_tweets[['coordenates_y_1']][i]<-if (GSK_tweets[[i,90]]==GSK_tweets[[i-1,90]]){
-      GSK_tweets[[i,90]]+i/900} else {
-        GSK_tweets[[i,90]]}
+  GSK_tweets[['coordenates_y_1']][1]<- GSK_tweets[[1,92]]
+  GSK_tweets[['coordenates_y_1']][i]<-if (GSK_tweets[[i,92]]==GSK_tweets[[i-1,92]]){
+      GSK_tweets[[i,92]]+i/900} else {
+        GSK_tweets[[i,92]]}
 }
 View(GSK_tweets)
 
@@ -206,7 +206,7 @@ View(GSK_tweets)
 #and if we copy the values in the new column, just copy a value from vector, 
 #there is no problem ahead.
 for (n in 1:length(GSK_tweets[['location']])){
-  GSK_tweets[['coordenates_x_1']][n]<- GSK_tweets[[n,91]]
+  GSK_tweets[['coordenates_x_1']][n]<- GSK_tweets[[n,93]]
 }
 
 View (GSK_tweets)
