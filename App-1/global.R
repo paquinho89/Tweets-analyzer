@@ -1,6 +1,7 @@
 #UPLOADING PACKAGES
 library(shiny)
 library(DT)
+
 ##########################################################################################
 # install rtweet from CRAN
 # Here we are checking if the package is installed
@@ -17,17 +18,15 @@ if(!require("tmap")){
   # Here we are loading the package
   library("tmap")
 }
+#This is for the maps and geolocations
 # Here we are checking if the package is installed
 if(!require("ggplot2")){
   # If the package is not in the system then it will be install
-  install.packages(
-    "ggplot2",
-    repos = c("http://rstudio.org/_packages",
-              "http://cran.rstudio.com")
-  )
+  install.packages("ggplot2", dependencies = TRUE)
   # Here we are loading the package
   library("ggplot2")
-  }
+}
+
 #This is for the maps and geolocations
 # Here we are checking if the package is installed
 if(!require("googleway")){
@@ -56,9 +55,21 @@ if(!require("yaml")){
 # Here we are checking if the package is installed
 if(!require("mapsapi")){
   # If the package is not in the system then it will be install
-  install.packages("yaml", repos="http://cran.rstudio.com/", dependencies=TRUE)
+  install.packages("mapsapi")
   # Here we are loading the package
   library("mapsapi")
+}
+
+#Colling the library leaflet to plot the map
+library("leaflet")
+
+#install devtools
+# Here we are checking if the package is installed
+if(!require("devtools")){
+  # If the package is not in the system then it will be install
+  install.packages("devtools", repos="http://cran.rstudio.com/", dependencies=TRUE)
+  # Here we are loading the package
+  library("devtools")
 }
 
 ##############################################################################
@@ -99,7 +110,6 @@ if(!require("dplyr")){
   }
 
 library(stopwords)
-library(leaflet)
 
 ############################################### PART 1 - PLOTTING THE MAP ###############################
 #############################################################################
@@ -134,5 +144,22 @@ create_token(
 #Hiding my google credentials
 #key_set("key_google")
 key_google<-key_get("key_google")
+
+####SHINYAPPS#####
+#Packages for the shinyapps.io
+#install.packages('rsconnect')
+
+#Authentification
+#Hidden my credentials
+#key_set("name")
+#key_set("token")
+#key_set("secret")
+
+#rsconnect::setAccountInfo(name=key_get("name"),
+                          #token= key_get("token"),
+                          #secret= key_get("secret"))
+
+#library(rsconnect)
+#rsconnect::deployApp('.TFM-R\App-1\ui.R')
 
 

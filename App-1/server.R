@@ -45,11 +45,11 @@ shinyServer(function(input, output){
     GSK_tweets_no_overlap<-data.frame(GSK_tweets_location_clean_2())
     for (i in 2:nrow(GSK_tweets_location_clean_2()))
     {
-      GSK_tweets_no_overlap[['coordenates_y_1']][1]<-GSK_tweets_location_clean_2()[[1,90]]
-      GSK_tweets_no_overlap[['coordenates_y_1']][i]<-if (GSK_tweets_location_clean_2()[[i,90]]==GSK_tweets_location_clean_2()[[i-1,90]])
+      GSK_tweets_no_overlap[['coordenates_y_1']][1]<-GSK_tweets_location_clean_2()[[1,92]]
+      GSK_tweets_no_overlap[['coordenates_y_1']][i]<-if (GSK_tweets_location_clean_2()[[i,92]]==GSK_tweets_location_clean_2()[[i-1,92]])
       {
-        GSK_tweets_location_clean_2()[[i,90]]+i/900} else {
-          GSK_tweets_location_clean_2()[[i,90]]
+        GSK_tweets_location_clean_2()[[i,92]]+i/900} else {
+          GSK_tweets_location_clean_2()[[i,92]]
         }
     }
     GSK_tweets_no_overlap
@@ -97,8 +97,7 @@ shinyServer(function(input, output){
         addMarkers(lng = as.numeric(GSK_tweets_location_clean_3()$coordenates_x), lat= as.numeric(GSK_tweets_location_clean_3()$coordenates_y_1),
                    popup = ~as.character(text),label = ~as.character(name))
     })
-  
-  
+
 #########PLOTING THE TABLE WITH THE WORDCLOUD FOR THE TWEETS##############
 #Ploting the wordcloud of the text of the tweets
   output$wordcloud_tweets <- renderPlot({
@@ -107,6 +106,7 @@ shinyServer(function(input, output){
               max.words = 500, random.order = TRUE, rot.per = 0.1,
               colors=brewer.pal(2,"Dark2"))
   })
+
 #########PLOTING THE TABLE WITH THE WORDCLOUD FOR THE HASHTAGS############## 
 #Ploting the wordcloud of the hashtag
   output$wordcloud_hashtag <- renderPlot({
